@@ -5,8 +5,6 @@ using System.Text;
 using UnityEngine;
 
 
-
-
 namespace OctopusController
 {
     internal class MyTentacleController
@@ -15,9 +13,10 @@ namespace OctopusController
         Transform[] _bones;
         Transform[] _endEffectorSphere;
 
-        public Transform[] Bones => _bones;
-        public Transform[] EndEffector => _endEffectorSphere;
+        public Transform[] Bones { get => _bones; }
+        public Transform[] EndEffector { get => _endEffectorSphere; }
 
+        // Exercise 1.
         public Transform[] LoadTentacleJoints(Transform root, TentacleMode mode)
         {
             tentacleMode = mode;
@@ -25,52 +24,60 @@ namespace OctopusController
             switch (tentacleMode)
             {
                 case TentacleMode.LEG:
-                    _bones = LoadJoints(root, 3, out _endEffectorSphere);
+                    LoadLegJoints(root);
                     break;
                 case TentacleMode.TAIL:
-                    _bones = LoadJoints(root, 5, out _endEffectorSphere);
+                    LoadTailJoints(root);
                     break;
                 case TentacleMode.TENTACLE:
-                    _bones = LoadTentacleJoints(root);
+                    LoadTentacleJoints(root);
                     break;
             }
-
             return Bones;
         }
 
-        private Transform[] LoadJoints(Transform root, int numJoints, out Transform[] endEffectors)
+        private void LoadLegJoints(Transform root)
         {
-            Transform[] joints = new Transform[numJoints];
+            _bones = new Transform[3];
             root = root.GetChild(0);
 
-            for (int i = 0; i < numJoints; i++)
+            for (int i = 0; i < _bones.Length; i++)
             {
-                joints[i] = root;
+                _bones[i] = root;
                 root = root.GetChild(1);
             }
 
-            endEffectors = new Transform[] { root };
-            return joints;
+            _endEffectorSphere = new Transform[1];
+            _endEffectorSphere[0] = root;
         }
 
-        private Transform[] LoadTentacleJoints(Transform root)
+        private void LoadTailJoints(Transform root)
         {
-            int numJoints = 50;
-            Transform[] joints = new Transform[numJoints];
-
-            for (int i = 0; i < 3; i++)
+            _bones = new Transform[5];
+            for (int i = 0; i < _bones.Length; i++)
             {
+                _bones[i] = root;
+                root = root.GetChild(1);
+            }
+
+            _endEffectorSphere = new Transform[1];
+            _endEffectorSphere[0] = root;
+        }
+
+        private void LoadTentacleJoints(Transform root)
+        {
+            _bones = new Transform[50];
+            root = root.GetChild(0).GetChild(0).GetChild(0);
+
+            for (int i = 0; i < _bones.Length; i++)
+            {
+                _bones[i] = root;
                 root = root.GetChild(0);
             }
 
-            for (int i = 0; i < numJoints - 1; i++) // Decrease the loop count by 1 to exclude the end effector
-            {
-                joints[i] = root;
-                root = root.GetChild(0);
-            }
-
-            _endEffectorSphere = new Transform[] { root };
-            return joints;
+            _endEffectorSphere = new Transform[1];
+            _endEffectorSphere[0] = root;
         }
     }
 }
+
