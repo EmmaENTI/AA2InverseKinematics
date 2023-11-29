@@ -4,17 +4,15 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-
 namespace OctopusController
 {
     internal class MyTentacleController
     {
         TentacleMode tentacleMode;
         Transform[] _bones;
-        Transform[] _endEffectorSphere;
-
+        Transform[] _endEffectorSphereTail;
         public Transform[] Bones { get => _bones; }
-        public Transform[] EndEffector { get => _endEffectorSphere; }
+        public Transform[] EndEffectorSphereTail { get => _endEffectorSphereTail; }
 
         // Exercise 1.
         public Transform[] LoadTentacleJoints(Transform root, TentacleMode mode)
@@ -47,8 +45,8 @@ namespace OctopusController
                 root = root.GetChild(1);
             }
 
-            _endEffectorSphere = new Transform[1];
-            _endEffectorSphere[0] = root;
+            _endEffectorSphereTail = new Transform[1];
+            _endEffectorSphereTail[0] = root;
         }
 
         private void LoadTailJoints(Transform root)
@@ -60,8 +58,8 @@ namespace OctopusController
                 root = root.GetChild(1);
             }
 
-            _endEffectorSphere = new Transform[1];
-            _endEffectorSphere[0] = root;
+            _endEffectorSphereTail = new Transform[1];
+            _endEffectorSphereTail[0] = root;
         }
 
         private void LoadTentacleJoints(Transform root)
@@ -75,9 +73,8 @@ namespace OctopusController
                 root = root.GetChild(0);
             }
 
-            _endEffectorSphere = new Transform[1];
-            _endEffectorSphere[0] = root;
+            _endEffectorSphereTail = new Transform[1];
+            _endEffectorSphereTail[0] = root;
         }
     }
 }
-
