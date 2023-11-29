@@ -10,13 +10,11 @@ namespace OctopusController
   
     public class MyScorpionController
     {
-        //TAIL
+        //TAIL and LEGS
         Transform tailTarget;
         Transform tailEndEffector;
         MyTentacleController _tail;
         float animationRange;
-
-        //LEGS
         Transform[] legTargets;
         Transform[] legFutureBases;
         MyTentacleController[] _legs = new MyTentacleController[6];
@@ -31,7 +29,6 @@ namespace OctopusController
             {
                 _legs[i] = new MyTentacleController();
                 _legs[i].LoadTentacleJoints(LegRoots[i], TentacleMode.LEG);
-                //TODO: initialize anything needed for the FABRIK implementation
             }
 
         }
@@ -40,26 +37,36 @@ namespace OctopusController
         {
             _tail = new MyTentacleController();
             _tail.LoadTentacleJoints(TailBase, TentacleMode.TAIL);
-            //TODO: Initialize anything needed for the Gradient Descent implementation
         }
 
         //TODO: Check when to start the animation towards target and implement Gradient Descent method to move the joints.
         public void NotifyTailTarget(Transform target)
         {
-
+            tailTarget = target;
         }
 
         //TODO: Notifies the start of the walking animation
         public void NotifyStartWalk()
         {
-
+            isTailMoving = true;
+            tailTimeToMove = 0;
+            animationRange = 5;
         }
 
         //TODO: create the apropiate animations and update the IK from the legs and tail
 
         public void UpdateIK()
         {
- 
+            UpdateLegPos();
+            if (isTailMoving)
+            {
+                tailTimeToMove += Time.deltaTime;
+                if (tailTimeToMove < animationRange)
+                    UpdateLegPos();
+                else
+                    isTailMoving = false;
+            }
+            UpdateTail();
         }
         #endregion
 
