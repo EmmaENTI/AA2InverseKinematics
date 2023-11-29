@@ -66,16 +66,18 @@ namespace OctopusController
                 float cos;
                 float error = 0.1f;
                 int tries = 0;
-
+                // Iterate until the tentacle movement is done or max tries reached
                 while (!done && tries < 10)
                 {
+                    // Iterate through each bone in reverse order for CCD
                     for (int j = _tentacles[i].Bones.Length - 1; j >= 0; j--)
                     {
+                        // Update the rotation of the current bone
                         UpdateBoneRotation(i, j, out rotationAngle, out cos);
                     }
 
                     tries++;
-
+                    // Check if the tentacle movement is within the acceptable error
                     CheckIfDone(i, error, ref done);
                 }
             }
@@ -96,7 +98,7 @@ namespace OctopusController
 
             _tentacles[i].Bones[j].Rotate(Vector3.Cross(E_R, T_R).normalized, rotationAngle, Space.World);
         }
-
+        // Check if the tentacle movement is done based on the acceptable error
         void CheckIfDone(int i, float error, ref bool done)
         {
             float x = Mathf.Abs(_tentacles[i].EndEffectorSphereTail[0].transform.position.x - _randomTargets[i].transform.position.x);
@@ -106,7 +108,7 @@ namespace OctopusController
             if (x < error && y < error && z < error)
                 done = true;
         }
-
+        // Normalize an angle to be within the range of -π to π
         double NormalizeAngle(double angle)
         {
             angle = angle % (2.0 * Mathf.PI);
@@ -116,7 +118,7 @@ namespace OctopusController
                 angle -= 2.0 * Mathf.PI;
             return angle;
         }
-
+        // Initialize tentacles with root transforms and random targets
         void InitializeTentacles(Transform[] tentacleRoots, Transform[] randomTargets)
         {
             _tentacles = new MyTentacleController[tentacleRoots.Length];
